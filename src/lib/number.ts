@@ -1,16 +1,16 @@
 /**
- * Multiplies a value by 2. (Also a full example of Typedoc's functionality.)
+ * Multiplies a value by 2. (Also a full example of Typedoc"s functionality.)
  *
  * ### Example (es module)
  * ```js
- * import { double } from 'typescript-starter'
+ * import { double } from "typescript-starter"
  * console.log(double(4))
  * // => 8
  * ```
  *
  * ### Example (commonjs)
  * ```js
- * var double = require('typescript-starter').double;
+ * var double = require("typescript-starter").double
  * console.log(double(4))
  * // => 8
  * ```
@@ -20,7 +20,7 @@
  * @anotherNote   Some other value.
  */
 export function double(value: number): number {
-  return value * 2;
+  return value * 2
 }
 
 /**
@@ -28,19 +28,19 @@ export function double(value: number): number {
  *
  * ### Example (es module)
  * ```js
- * import { power } from 'typescript-starter'
+ * import { power } from "typescript-starter"
  * console.log(power(2,3))
  * // => 8
  * ```
  *
  * ### Example (commonjs)
  * ```js
- * var power = require('typescript-starter').power;
+ * var power = require("typescript-starter").power
  * console.log(power(2,3))
  * // => 8
  * ```
  */
 export function power(base: number, exponent: number): number {
   // This is a proposed es7 operator, which should be transpiled by Typescript
-  return base ** exponent;
+  return base ** exponent
 }
