@@ -21,8 +21,10 @@ export function createPrivateKey(keySize = 32): Buffer {
   return recursiveVerify(randomBytes)
 }
 
-export function privateKeyToPublicKey(privateKey: Buffer): Buffer {
-  return secp256k1.publicKeyCreate(privateKey, false).slice(1)
+export function privateKeyToPublicKey(privateKey: Buffer, compressed = true): Buffer {
+  // compressed => 33 bytes compressed public key
+  // uncompressed => 65 bytes compressed public key
+  return secp256k1.publicKeyCreate(privateKey, compressed)
 }
 
 // function publicKeyHash(publicKey: Buffer): Buffer {
