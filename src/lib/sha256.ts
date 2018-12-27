@@ -13,10 +13,10 @@ import shaJs from 'sha.js'
  *
  * @returns sha256 message digest
  */
-export function sha256(message: any): string {
-  return shaJs('sha256')
-    .update(message)
-    .digest('hex')
+export function sha256(message: any, isHex = false): any {
+  return isHex
+    ? shaJs('sha256').update(message).digest('hex')
+    : shaJs('sha256').update(message).digest()
 }
 
 /**
@@ -31,8 +31,8 @@ export function sha256(message: any): string {
  *
  * @returns sha256 message digest
  */
-export function sha256Native(message: any): string {
-  return createHash('sha256')
-    .update(message)
-    .digest('hex')
+export function sha256Native(message: any, isHex = false): any {
+  return isHex
+    ? createHash('sha256').update(message).digest('hex')
+    : createHash('sha256').update(message).digest()
 }
