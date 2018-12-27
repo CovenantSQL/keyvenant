@@ -1,6 +1,6 @@
 {
   "name": "keyvenant",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Keyvenant is a JavaScript tool to generate and export CovenantSQL keys to facilitate key management locally and in web extensions.",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
