@@ -1,6 +1,6 @@
 // tslint:disable:no-expression-statement no-object-mutation
 import test, { Macro } from 'ava'
-import { sha256, sha256Native } from './hash'
+import { sha256, sha256Native } from './sha256'
 
 const hash: Macro<[string, string]> = (t, input: string, expected: string) => {
   t.is(sha256(input), expected)

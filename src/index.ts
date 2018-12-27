@@ -19,6 +19,8 @@ import {
   verifyPrivateKey
 } from './lib/keygen'
 
+import { THash } from './lib/THash'
+
 export * from './lib/keygen'
 
 export const constants = {
@@ -35,8 +37,10 @@ console.log(JSON.stringify(key), key.length)
 console.log(pub, pub.length)
 console.log('\n')
 
-const k = Buffer.from(require('./lib/test_data/privateKeys.json')[2].data)
+const k = Buffer.from(require('./lib/test_data/privateKeys.json')[1].data)
 console.log('// k', k)
 console.log('verifyPrivateKey k', verifyPrivateKey(k))
-console.log(privateKeyToPublicKey(k))
-console.log(privateKeyToPublicKey(k).length)
+const kPub = privateKeyToPublicKey(k)
+console.log(kPub)
+console.log(kPub.length)
+console.log(THash(kPub))
