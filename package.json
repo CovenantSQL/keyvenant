@@ -19,6 +19,7 @@
     "test": "run-s build test:*",
     "test:lint": "tslint --project . && prettier \"src/**/*.ts\" --list-different",
     "test:unit": "nyc --silent ava",
+    "dev": "ts-node src/index.ts",
     "watch": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\"",
     "cov": "run-s build test:unit cov:html && opn coverage/index.html",
     "cov:html": "nyc report --reporter=html",
@@ -52,6 +53,8 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "crypto-browserify": "^3.12.0",
+    "secp256k1": "^3.6.0",
     "sha.js": "^2.4.11"
   },
   "devDependencies": {
@@ -65,6 +68,7 @@
     "prettier": "^1.15.2",
     "standard-version": "^4.4.0",
     "trash-cli": "^1.4.0",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-immutable": "^5.0.0",
@@ -86,7 +90,7 @@
     }
   },
   "prettier": {
-    "singleQuote": false,
+    "singleQuote": true,
     "semi": false
   },
   "nyc": {
