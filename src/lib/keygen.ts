@@ -1,4 +1,7 @@
 import secp256k1 from 'secp256k1/elliptic'
+import coinstring from 'coinstring'
+import { constants } from '../index'
+import { THash } from './THash'
 
 // Env boolean to support both node and web
 const isBrowser = typeof process === 'undefined' || !process.nextTick
@@ -27,7 +30,9 @@ export function privateKeyToPublicKey(privateKey: Buffer, compressed = true): Bu
   return secp256k1.publicKeyCreate(privateKey, compressed)
 }
 
-// function publicKeyHash(publicKey: Buffer): Buffer {
-// }
-// export function publicKeyToAddress(publicKey: Buffer): Buffer {
-// }
+export function publicKeyToAddress(publicKey: Buffer): string {
+  // THash to get publicKey hash
+  const publicKeyHash = THash(publicKey)
+  const version = constants.addressVersion.testNet
+  return coinstring.encode(publicKeyHash, version)
+}
