@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// import {
-//   createPrivateKey,
-//   privateKeyToPublicKey,
-//   verifyPrivateKey,
-//   publicKeyToAddress
-// } from './lib/keygen'
-// import {
-//   deriveKey,
-//   verifyKey
-// } from './lib/secretkey'
+
+import {
+  // createPrivateKey,
+  privateKeyToPublicKey,
+  // verifyPrivateKey,
+  publicKeyToAddress
+} from './lib/keygen'
+import { deriveKey, verifyKey } from './lib/secretkey'
 import { encrypt, decrypt } from './lib/symmetric'
 
 export * from './lib/keygen'
@@ -41,35 +39,42 @@ export const constants = {
 }
 
 // local testing
-// const key = createPrivateKey()
-// const pub = privateKeyToPublicKey(key)
-// console.log(JSON.stringify(key), key.length)
-// console.log(pub, pub.length)
-// console.log('\n')
-
-// const k = Buffer.from(require('./lib/test_data/privateKeys.json')[0].data)
-// console.log('// k', k)
-// console.log('verifyPrivateKey k', verifyPrivateKey(k))
-// const kPub = privateKeyToPublicKey(k)
-// console.log(kPub)
-// console.log(kPub.length)
-// console.log(publicKeyToAddress(kPub))
-
-console.log('---------')
-// console.log(deriveKey('foo'))
-
-// console.log(verifyKey('foo', {
-//   secretKey: 'd961a5b5a30bb21c87e81ca6886594db63100b254d4fed9cab406d1617a682eb',
-//   salt: '951dcfb80c7b7e0c033e5e1fbc2c0c0053455b92a087580a7be9d093e286fc018f207ca6f356af9c9aa23862f5be8b9e',
-//   iv: ''
-// }))
-
+// const prv = createPrivateKey().toString('hex')
 const prv = 'dffe3ae00a500e5af754d067242fe7cf831da10e3705d3edbc85fe7fbddcf4aa'
-const sec = 'd961a5b5a30bb21c87e81ca6886594db63100b254d4fed9cab406d1617a682eb'
-const iv = 'fff9276c5b350b8750159f0abbaf243f'
+const pub = privateKeyToPublicKey(Buffer.from(prv, 'hex')).toString('hex')
+const address = publicKeyToAddress(Buffer.from(pub, 'hex'))
 
-const ciphertext = encrypt(prv, sec, iv, true)
+const derivedKey = deriveKey('password')
+console.log(derivedKey)
+// { secretKey: '', salt: '', iv: '' }
+console.log('verifyKey: ', verifyKey('password', derivedKey))
+
+// aes256 test
+// const sec = 'd961a5b5a30bb21c87e81ca6886594db63100b254d4fed9cab406d1617a682eb'
+const ciphertext = encrypt(prv, derivedKey.secretKey, derivedKey.iv)
 console.log(ciphertext)
-const d_prv = decrypt(ciphertext, sec, iv, true)
+
+console.log('============================== keystore begin')
+var keystore = {
+  address,
+  Crypto: {
+    cipher: 'aes-256',
+    ciphertext,
+    cipherparams: {
+      iv: derivedKey.iv
+    }
+  },
+  kdf: 'sha256x2',
+  kdfparams: {
+    salt: derivedKey.salt
+  },
+  version: 1
+}
+console.log(JSON.stringify(keystore, null, 2))
+console.log('============================== keystore end')
+
+
+console.log('recover private key:')
+const d_prv = decrypt(ciphertext, derivedKey.secretKey, derivedKey.iv)
 console.log(d_prv)
 console.log(d_prv === prv)

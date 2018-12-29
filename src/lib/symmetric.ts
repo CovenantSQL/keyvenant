@@ -14,9 +14,8 @@ export function encrypt(
   plaintext: string,
   key: string,
   iv: string,
-  isStr = false,
   algo = 'aes256'
-): Buffer | string {
+): string {
   if (!isCipherAvailable(algo)) {
     throw new Error('crypto cipher ' + algo + ' is not available')
   }
@@ -28,18 +27,15 @@ export function encrypt(
   const lastHalf = cipher.final()
   const encrypted = Buffer.concat([firstHalf, lastHalf])
 
-  return isStr
-    ? encrypted.toString('hex')
-    : encrypted
+  return encrypted.toString('hex')
 }
 
 export function decrypt(
   encrypted: string,
   key: string,
   iv: string,
-  isStr = false,
   algo = 'aes256'
-): Buffer | string {
+): string {
   if (!isCipherAvailable(algo)) {
     throw new Error('crypto cipher ' + algo + ' is not available')
   }
@@ -50,7 +46,5 @@ export function decrypt(
   const plaintext = decipher.update(string2Buffer(encrypted))
 
   // return Buffer or string
-  return isStr
-    ? plaintext.toString('hex')
-    : plaintext
+  return plaintext.toString('hex')
 }
