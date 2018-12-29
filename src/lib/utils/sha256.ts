@@ -36,3 +36,8 @@ export function sha256Native(message: any, isHex = false): any {
     ? createHash('sha256').update(message).digest('hex')
     : createHash('sha256').update(message).digest()
 }
+
+export function sha256x2(message: any, isHex = false): any {
+  const first = sha256(message, isHex)
+  return sha256(first, isHex)
+}

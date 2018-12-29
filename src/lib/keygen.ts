@@ -1,11 +1,8 @@
 import secp256k1 from 'secp256k1/elliptic'
 import coinstring from 'coinstring'
 import { constants } from '../index'
-import { THash } from './utils/THash'
-
-// Env boolean to support both node and web
-const isBrowser = typeof process === 'undefined' || !process.nextTick
-const crypto = isBrowser ? require('crypto-browserify') : require('crypto')
+import THash from './utils/THash'
+import crypto from './utils/crypto'
 
 export function verifyPrivateKey(privateKey: Buffer): Boolean {
   return secp256k1.privateKeyVerify(privateKey)
