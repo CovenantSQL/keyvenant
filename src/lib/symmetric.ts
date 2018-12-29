@@ -1,55 +1,56 @@
-import { toBuf } from './utils'
+import { string2Buffer } from './utils'
 import crypto from './utils/crypto'
-import { sha256x2 } from './utils/sha256'
-import { constants } from '../index'
 
-type DerivedKey = {
-  secretKey: string,
-  salt: string
+// prv: dffe3ae00a500e5af754d067242fe7cf831da10e3705d3edbc85fe7fbddcf4aa
+// sec: d961a5b5a30bb21c87e81ca6886594db63100b254d4fed9cab406d1617a682eb
+// iv:  fff9276c5b350b8750159f0abbaf243f
+
+function isCipherAvailable(algo: string): Boolean {
+  return crypto.getCiphers().some(cipher => { return cipher === algo })
 }
 
-/**
- * Derived secret key from key derivation function(kdf)
- * @param  password [description]
- * @param  options  [description]
- * @return          [description]
- */
-export function deriveKey(
-  password: string,
-  // options?: object
-): DerivedKey {
-  if (typeof password === 'undefined' || password === null) {
-    throw new Error('Must provide password and salt to derive a key')
+// return 98b2304229051f3bed0ba2107c2094eaa3fa63a304fd4cdfa9b4261c84a509a38bcc25247ca903963d338909804b91b5
+export function encrypt(
+  plaintext: string,
+  key: string,
+  iv: string,
+  isStr = false,
+  algo = 'aes256'
+): Buffer | string {
+  if (!isCipherAvailable(algo)) {
+    throw new Error('crypto cipher ' + algo + ' is not available')
   }
 
-  // prepare salt & iv
-  const salt = crypto.randomBytes(constants.secretKey.saltLength)
+  // AES256 cipher
+  const cipher = crypto.createCipheriv(algo, string2Buffer(key), string2Buffer(iv))
+  // encrypt plaintext buffer
+  const firstHalf = cipher.update(string2Buffer(plaintext))
+  const lastHalf = cipher.final()
+  const encrypted = Buffer.concat([firstHalf, lastHalf])
 
-  // convert strings to buffers
-  const passwordBuffer = toBuf(password, 'utf8')
-
-  // use double sha256 as key derivation function
-  // Note(chenxi): why not use pbkdf2?
-  const concated = Buffer.concat([passwordBuffer, salt])
-  const secretKey = sha256x2(concated)
-
-  return {
-    secretKey: secretKey.toString('hex'),
-    salt: salt.toString('hex')
-  }
+  return isStr
+    ? encrypted.toString('hex')
+    : encrypted
 }
 
-export function verifyKey(
-  password: string,
-  derivedKey: DerivedKey
-): Boolean {
-  const secretKey = toBuf(derivedKey.secretKey, 'hex')
-  const salt = toBuf(derivedKey.salt, 'hex')
+export function decrypt(
+  encrypted: string,
+  key: string,
+  iv: string,
+  isStr = false,
+  algo = 'aes256'
+): Buffer | string {
+  if (!isCipherAvailable(algo)) {
+    throw new Error('crypto cipher ' + algo + ' is not available')
+  }
 
-  // convert strings to buffers
-  const passwordBuffer = toBuf(password, 'utf8')
-  const concated = Buffer.concat([passwordBuffer, salt])
-  const secretKeyToVerify = sha256x2(concated)
+  // AES256 decipher
+  const decipher = crypto.createDecipheriv(algo, string2Buffer(key), string2Buffer(iv))
+  // decrypted plaintext buffer
+  const plaintext = decipher.update(string2Buffer(encrypted))
 
-  return Buffer.compare(secretKey, secretKeyToVerify) === 0
+  // return Buffer or string
+  return isStr
+    ? plaintext.toString('hex')
+    : plaintext
 }

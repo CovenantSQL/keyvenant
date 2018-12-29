@@ -14,7 +14,7 @@ function isBase64(str: string): Boolean {
     : false
 }
 
-export function toBuf(str: string, enc?: string): Buffer {
+export function string2Buffer(str: string, enc?: string): Buffer {
     if (!enc && isHex(str)) {
       enc = 'hex'
     }

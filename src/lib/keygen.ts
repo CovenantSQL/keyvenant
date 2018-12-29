@@ -4,11 +4,15 @@ import { constants } from '../index'
 import THash from './utils/THash'
 import crypto from './utils/crypto'
 
-export function verifyPrivateKey(privateKey: Buffer): Boolean {
+export function verifyPrivateKey(
+  privateKey: Buffer
+): Boolean {
   return secp256k1.privateKeyVerify(privateKey)
 }
 
-export function createPrivateKey(keySize = 32): Buffer {
+export function createPrivateKey(
+  keySize = 32
+): Buffer {
   const recursiveVerify = (randomBytes: Buffer) => {
     const privateKey = randomBytes.slice(0, keySize)
     if (!verifyPrivateKey(privateKey)) {
@@ -21,7 +25,10 @@ export function createPrivateKey(keySize = 32): Buffer {
   return recursiveVerify(randomBytes)
 }
 
-export function privateKeyToPublicKey(privateKey: Buffer, compressed = true): Buffer {
+export function privateKeyToPublicKey(
+  privateKey: Buffer,
+  compressed = true
+): Buffer {
   // compressed => 33 bytes compressed public key
   // uncompressed => 65 bytes compressed public key
   return secp256k1.publicKeyCreate(privateKey, compressed)
