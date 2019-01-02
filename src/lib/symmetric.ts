@@ -22,6 +22,7 @@ export function encrypt(
 
   // AES256 cipher
   const cipher = crypto.createCipheriv(algo, string2Buffer(key), string2Buffer(iv))
+
   // encrypt plaintext buffer
   const firstHalf = cipher.update(string2Buffer(plaintext))
   const lastHalf = cipher.final()
@@ -31,9 +32,9 @@ export function encrypt(
 }
 
 export function decrypt(
-  encrypted: string,
-  key: string,
-  iv: string,
+  encrypted: string, // 48 bytes
+  key: string, // derivedKey 16 bytes
+  iv: string, // 16 btyes
   algo = 'aes256'
 ): string {
   if (!isCipherAvailable(algo)) {

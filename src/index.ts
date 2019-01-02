@@ -40,14 +40,15 @@ export const constants = {
 
 // local testing
 // const prv = createPrivateKey().toString('hex')
-const prv = 'dffe3ae00a500e5af754d067242fe7cf831da10e3705d3edbc85fe7fbddcf4aa'
+const prv = 'f7c0bc718eb0df81e796a11e6f62e23cd2be0a4bdcca30df40d4d915cc3be3ff'
 const pub = privateKeyToPublicKey(Buffer.from(prv, 'hex')).toString('hex')
 const address = publicKeyToAddress(Buffer.from(pub, 'hex'))
+console.log('Public key: ', pub)
 
-const derivedKey = deriveKey('password')
+const derivedKey = deriveKey('')
 console.log(derivedKey)
 // { secretKey: '', salt: '', iv: '' }
-console.log('verifyKey: ', verifyKey('password', derivedKey))
+console.log('verifyKey: ', verifyKey('', derivedKey))
 
 // aes256 test
 // const sec = 'd961a5b5a30bb21c87e81ca6886594db63100b254d4fed9cab406d1617a682eb'
