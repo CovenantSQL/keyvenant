@@ -6,12 +6,20 @@ import * as keygen from './keygen'
 import * as secretkey from './secretkey'
 import * as symmetric from './symmetric'
 
+/**
+ * create CovenantSQL keystore
+ * @param  password          master password user typed-in
+ * @param  salt              kdf salt
+ * @param  addrVersion       address version
+ * @param  privateKeyVersion private key encode version
+ * @return keystore object
+ */
 export function createKeystore(
   password: string,
   salt: string,
   addrVersion: number,
   privateKeyVersion: number
-) {
+): object {
   // generate new key pair
   let prvKey: string = keygen.createPrivateKey()
   let pubKey: string = keygen.privateKeyToPublicKey(prvKey)
@@ -28,9 +36,20 @@ export function createKeystore(
 
   let mac: string = constructMac(secretKey, ciphertext)
   let keystore = marshal(address, salt, mac, ciphertext, iv, privateKeyVersion)
-  console.log(keystore)
+
+  return keystore
 }
 
+/**
+ * construct keystore json
+ * @param  address           wallet address
+ * @param  salt              kdf salt
+ * @param  mac               mac value
+ * @param  ciphertext        encrypted text
+ * @param  iv                symmetric iv
+ * @param  privateKeyVersion version hex
+ * @return keystore object
+ */
 function marshal(
   address: string,
   salt: string,
