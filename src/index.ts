@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createKeystore } from './lib/keystore'
+import * as keystore from './lib/keystore'
 
 // default config
 const defaultConfig = {
@@ -39,20 +39,24 @@ export default class Keyvenant {
     this.config = (props && props.config) || defaultConfig
   }
 
-  create(
-    password: string
-  ): void {
+  create(password: string): void {
     let addrVersion: number = this.config.isMainNet
       ? this.config.versions.address.mainNet
       : this.config.versions.address.testNet
 
+    let privateKeyVersion: number = this.config.versions.privateKey
     let salt: string = this.config.secretKey.salt
 
-    createKeystore(
+    keystore.createKeystore(
       password,
       salt,
-      addrVersion
+      addrVersion,
+      privateKeyVersion
     )
+  }
+
+  recover(encrypted: string) {
+    console.log(keystore.deconstructEncrypted(encrypted))
   }
 }
 
