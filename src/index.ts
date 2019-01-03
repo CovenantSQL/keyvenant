@@ -19,16 +19,17 @@ import { createKeystore } from './lib/keystore'
 // default config
 const defaultConfig = {
   isMainNet: false,
-  addressVersion: {
-    mainNet: 0x0,
-    testNet: 0x6f,
+  versions: {
+    address: {
+      mainNet: 0x0,
+      testNet: 0x6f
+    },
+    privateKey: 0x23
   },
-  privateKeyVersion: 0x23,
   secretKey: {
-    // IV length must equal AES block size, which is 128 bits, 16 bytes
-    ivLength: 16,
-    privateKeyLength: 32,
-    get saltLength():number { return this.privateKeyLength + this.ivLength }
+    salt: Buffer.from('auxten-key-salt-auxten', 'utf8').toString('hex'),
+    // salt: 'c04ea47149654131794b6a702f394543',
+    ivLength: 16 // IV length must equal AES block size, 16 bytes
   }
 }
 
@@ -39,17 +40,27 @@ export default class Keyvenant {
     this.config = (props && props.config) || defaultConfig
   }
 
-  create() {
-    let version: number = this.config.isMainNet
-      ? this.config.addressVersion.mainNet
-      : this.config.addressVersion.testNet
+  create(
+    password: string
+  ): void {
+    let addrVersion: number = this.config.isMainNet
+      ? this.config.versions.address.mainNet
+      : this.config.versions.address.testNet
 
-    createKeystore(version)
+    let salt: string = this.config.secretKey.salt
+    let ivLength: number = this.config.secretKey.ivLength
+
+    createKeystore(
+      password,
+      salt,
+      addrVersion,
+      ivLength
+    )
   }
 }
 
 let k = new Keyvenant()
-k.create()
+k.create('')
 
 // import {
 //   // createPrivateKey,

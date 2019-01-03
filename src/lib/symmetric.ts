@@ -45,6 +45,14 @@ export function decrypt(
   return plaintext.toString('hex')
 }
 
+export function generateIv(
+  length: number
+): string {
+  let iv: Buffer = crypto.randomBytes(length)
+
+  return iv.toString('hex')
+}
+
 function isCipherAvailable(algo: string): Boolean {
   return crypto.getCiphers().some(cipher => { return cipher === algo })
 }
