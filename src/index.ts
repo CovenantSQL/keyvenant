@@ -27,9 +27,8 @@ const defaultConfig = {
     privateKey: 0x23
   },
   secretKey: {
-    salt: Buffer.from('auxten-key-salt-auxten', 'utf8').toString('hex'),
-    // salt: 'c04ea47149654131794b6a702f394543',
-    ivLength: 16 // IV length must equal AES block size, 16 bytes
+    salt: Buffer.from('auxten-key-salt-auxten', 'utf8').toString('hex')
+    // salt: 'c04ea47149654131794b6a702f394543'
   }
 }
 
@@ -48,13 +47,11 @@ export default class Keyvenant {
       : this.config.versions.address.testNet
 
     let salt: string = this.config.secretKey.salt
-    let ivLength: number = this.config.secretKey.ivLength
 
     createKeystore(
       password,
       salt,
-      addrVersion,
-      ivLength
+      addrVersion
     )
   }
 }

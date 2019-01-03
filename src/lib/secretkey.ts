@@ -6,7 +6,7 @@ import { sha256x2 } from './utils/sha256'
  * use sha256x2 as key derivation function(kdf)
  * @param  password user's password in utf8
  * @param  salt     default salt in hex
- * @return secretKey string in hex
+ * @return secretKey string in hex (16 bytes because of sha256)
  */
 export function derive(
   password: string,

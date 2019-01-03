@@ -8,7 +8,6 @@ export function createKeystore(
   password: string,
   salt: string,
   addrVersion: number,
-  ivLength: number,
 ) {
   // generate new key pair
   let prvKey: string = keygen.createPrivateKey()
@@ -24,8 +23,11 @@ export function createKeystore(
   console.log('verify', secretkey.verify(password, salt, secretKey))
 
   // prepare iv for symmetric encryption
-  let iv: string = symmetric.generateIv(ivLength)
+  let iv: string = symmetric.generateIv()
   console.log('iv', iv)
+  let ciphertext: string = symmetric.encrypt(prvKey, secretKey, iv)
+  console.log('ciphertext', ciphertext)
+  console.log('decrypted', symmetric.decrypt(ciphertext, secretKey, iv))
 }
 
 // function marshal(

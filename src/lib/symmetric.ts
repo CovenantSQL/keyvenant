@@ -1,10 +1,14 @@
 import { string2Buffer } from './utils'
 import crypto from './utils/crypto'
 
-// prv: dffe3ae00a500e5af754d067242fe7cf831da10e3705d3edbc85fe7fbddcf4aa
-// sec: d961a5b5a30bb21c87e81ca6886594db63100b254d4fed9cab406d1617a682eb
-// iv:  fff9276c5b350b8750159f0abbaf243f
-
+/**
+ * symmetric encryption
+ * @param  plaintext     input text to be encrypted
+ * @param  key           serectKey string in hex (16 btyes)
+ * @param  iv            iv string in hex (16 btyes because of AES 128bit blocksize)
+ * @param  algo='aes256' symmetric encryption algo, defualt is AES256
+ * @return encrypted ciphertext in hex (48 btyes)
+ */
 export function encrypt(
   plaintext: string,
   key: string,
@@ -14,8 +18,7 @@ export function encrypt(
   if (!isCipherAvailable(algo)) {
     throw new Error('crypto cipher ' + algo + ' is not available')
   }
-
-  // cipher
+  // cipher, default as AES256
   const cipher = crypto.createCipheriv(algo, string2Buffer(key), string2Buffer(iv))
 
   // encrypt plaintext buffer
@@ -26,6 +29,14 @@ export function encrypt(
   return encrypted.toString('hex')
 }
 
+/**
+ * symmetric decryption
+ * @param  encrypted     encrypted ciphertext in hex (48 btyes)
+ * @param  key           serectKey string in hex (16 btyes)
+ * @param  iv            iv string in hex (16 btyes because of AES 128bit blocksize)
+ * @param  algo='aes256' symmetric encryption algo, defualt is AES256
+ * @return decrypted text in hex
+ */
 export function decrypt(
   encrypted: string, // 48 bytes
   key: string, // derivedKey 16 bytes
@@ -45,14 +56,26 @@ export function decrypt(
   return plaintext.toString('hex')
 }
 
+/**
+ * randomly generate iv
+ * @param  length default length is 16 btyes because of AES 128bit blocksize
+ * @return iv in hex
+ */
 export function generateIv(
-  length: number
+  length = 16
 ): string {
   let iv: Buffer = crypto.randomBytes(length)
 
   return iv.toString('hex')
 }
 
-function isCipherAvailable(algo: string): Boolean {
+/**
+ * check cipher availablility
+ * @param  algo [description]
+ * @return boolean of cipher availablility
+ */
+function isCipherAvailable(
+  algo: string
+): Boolean {
   return crypto.getCiphers().some(cipher => { return cipher === algo })
 }
