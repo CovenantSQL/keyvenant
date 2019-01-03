@@ -1,5 +1,6 @@
 import coinstring from 'coinstring'
 import { string2Buffer } from './utils'
+import THash from './utils/THash'
 
 import * as keygen from './keygen'
 import * as secretkey from './secretkey'
@@ -17,27 +18,23 @@ export function createKeystore(
 
   // covert to address
   let address: string = keygen.publicKeyToAddress(pubKey, addrVersion)
-  console.log('keygen', prvKey, pubKey, address)
 
   // get derived key from masterPassword
-  let secretKey = secretkey.derive(password, salt)
-  console.log('derivedKey', secretKey)
-  console.log('verify', secretkey.verify(password, salt, secretKey))
+  let secretKey: string = secretkey.derive(password, salt)
 
   // prepare iv for symmetric encryption
   let iv: string = symmetric.generateIv()
-  console.log('iv', iv)
   let ciphertext: string = symmetric.encrypt(prvKey, secretKey, iv)
-  console.log('ciphertext', ciphertext)
-  console.log('decrypted', symmetric.decrypt(ciphertext, secretKey, iv))
 
-  let keystore = marshal(address, salt, ciphertext, iv, privateKeyVersion)
+  let mac: string = constructMac(secretKey, ciphertext)
+  let keystore = marshal(address, salt, mac, ciphertext, iv, privateKeyVersion)
   console.log(keystore)
 }
 
 function marshal(
   address: string,
   salt: string,
+  mac: string,
   ciphertext: string,
   iv: string,
   privateKeyVersion: number
@@ -47,7 +44,7 @@ function marshal(
   let keystore: object = {
     address,
     encrypted,
-    mac: '',
+    mac,
     crypto: {
       cipher: 'aes-256',
       ciphertext,
@@ -60,6 +57,28 @@ function marshal(
     version: privateKeyVersion,
   }
   return keystore
+}
+
+/**
+ * construct Mac for password pre-check
+ * secretKey + ciphertext as mac input
+ * then THash convert to Mac hex string and return
+ * @param  secretKey  derived key hex string
+ * @param  ciphertext encrypted hex string
+ * @return mac as hex string
+ */
+function constructMac(
+  secretKey: string,
+  ciphertext: string
+): string {
+  let secretKeyBuf: Buffer = string2Buffer(secretKey)
+  let ciphertextBuf: Buffer = string2Buffer(ciphertext)
+
+  // concat buffer & THash
+  let concated: Buffer = Buffer.concat([secretKeyBuf, ciphertextBuf])
+  let hashedMac: Buffer = THash(concated)
+
+  return hashedMac.toString('hex')
 }
 
 /**
@@ -80,7 +99,7 @@ function constructEncrypted(
   let ivBuf: Buffer = string2Buffer(iv)
   let ciphertextBuf: Buffer = string2Buffer(ciphertext)
 
-  // concat and base58 encode
+  // concat buffer & base58 encode
   let concated: Buffer = Buffer.concat([versionBuf, ivBuf, ciphertextBuf])
   let base58Encoded: string = coinstring.encode(concated)
 

@@ -61,7 +61,7 @@ export default class Keyvenant {
 }
 
 let k = new Keyvenant()
-k.create('')
+k.create('foo')
 
 // import {
 //   // createPrivateKey,
