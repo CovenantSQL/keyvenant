@@ -16,20 +16,9 @@
 
 import { createKeystore } from './lib/keystore'
 
-createKeystore()
-
-// import {
-//   // createPrivateKey,
-//   privateKeyToPublicKey,
-//   // verifyPrivateKey,
-//   publicKeyToAddress
-// } from './lib/keygen'
-// import { deriveKey, verifyKey } from './lib/secretkey'
-// import { encrypt, decrypt } from './lib/symmetric'
-//
-// export * from './lib/keygen'
-
-export const config = {
+// default config
+const defaultConfig = {
+  isMainNet: false,
   addressVersion: {
     mainNet: 0x0,
     testNet: 0x6f,
@@ -42,6 +31,37 @@ export const config = {
     get saltLength():number { return this.privateKeyLength + this.ivLength }
   }
 }
+
+export default class Keyvenant {
+  config: any
+
+  constructor(props?: any) {
+    this.config = (props && props.config) || defaultConfig
+  }
+
+  create() {
+    let version: number = this.config.isMainNet
+      ? this.config.addressVersion.mainNet
+      : this.config.addressVersion.testNet
+
+    createKeystore(version)
+  }
+}
+
+let k = new Keyvenant()
+k.create()
+
+// import {
+//   // createPrivateKey,
+//   privateKeyToPublicKey,
+//   // verifyPrivateKey,
+//   publicKeyToAddress
+// } from './lib/keygen'
+// import { deriveKey, verifyKey } from './lib/secretkey'
+// import { encrypt, decrypt } from './lib/symmetric'
+//
+// export * from './lib/keygen'
+
 
 // // local testing
 // // const prv = createPrivateKey().toString('hex')
