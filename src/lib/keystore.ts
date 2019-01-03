@@ -23,11 +23,12 @@ export function createKeystore(
   // generate new key pair
   let prvKey: string = keygen.createPrivateKey()
   let pubKey: string = keygen.privateKeyToPublicKey(prvKey)
+  console.log('Print out private key for test',  prvKey)
 
   // covert to address
   let address: string = keygen.publicKeyToAddress(pubKey, addrVersion)
 
-  // get derived key from masterPassword
+  // get derived key from password
   let secretKey: string = secretkey.derive(password, salt)
 
   // prepare iv for symmetric encryption
@@ -38,6 +39,36 @@ export function createKeystore(
   let keystore = marshal(address, salt, mac, ciphertext, iv, privateKeyVersion)
 
   return keystore
+}
+
+/**
+ * recover private key from keystore and password
+ * @param  password
+ * @param  keystore
+ * @return private key string in hex
+ */
+export function recoverFromKeystore(
+  password: string,
+  salt: string,
+  keystore: any
+): string {
+  // get derived key from password
+  let secretKey: string = secretkey.derive(password, salt)
+
+  // prepare iv for symmetric encryption
+  let iv: string = keystore.crypto.iv
+  let ciphertext: string = keystore.crypto.ciphertext
+
+  // check mac
+  let macToVerify: string = constructMac(secretKey, ciphertext)
+  if (macToVerify !== keystore.mac) {
+    throw new Error('Input password is not valid for the keystore')
+  }
+
+  // decrypt private key
+  let prvKey: string = symmetric.decrypt(ciphertext, secretKey, iv)
+
+  return prvKey
 }
 
 /**

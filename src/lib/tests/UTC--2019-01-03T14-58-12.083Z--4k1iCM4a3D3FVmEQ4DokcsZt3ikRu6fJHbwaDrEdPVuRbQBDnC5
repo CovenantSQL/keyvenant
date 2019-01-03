@@ -1,11 +1,3 @@
-# keyvenant
-
-Keyvenant is a JavaScript tool to generate and export CovenantSQL keys to facilitate key management locally and in web extensions.
-
-## keystore
-example:
-```
-keystore:
 {
   "address": "4k1iCM4a3D3FVmEQ4DokcsZt3ikRu6fJHbwaDrEdPVuRbQBDnC5",
   "encrypted": "MZdus3mQcfCTr448CNUgzVTyDZrDQC3UARTdJvKkh8ZGNVHEQakjZ8y4vFsbYL9gzSw9tA42ip3Ay9H9PKwQ367C2hvZ8k",
@@ -21,9 +13,3 @@ keystore:
   },
   "version": 35
 }
-
-private key:
-61dcd9f332a39f47f71434306d82e7f04dc04271170fd5902f357770085d6e48
-```
-
-- try create & recover with `yarn dev`

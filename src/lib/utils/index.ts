@@ -55,3 +55,12 @@ export function exportToFile(
   fs.writeFileSync(outpath, JSON.stringify(keystore, null, 2))
   return outpath
 }
+
+export function importFromFile(
+  filepath: string
+): any {
+  let file = fs.readFileSync(filepath, 'utf8')
+  let keystore: object = JSON.parse(file)
+
+  return keystore
+}

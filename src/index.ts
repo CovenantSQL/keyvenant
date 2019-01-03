@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as keystore from './lib/keystore'
-import { exportToFile } from './lib/utils'
+import { createKeystore, recoverFromKeystore } from './lib/keystore'
+import { exportToFile, importFromFile } from './lib/utils'
 
 // default config
 const defaultConfig = {
@@ -40,6 +40,11 @@ export default class Keyvenant {
     this.config = (props && props.config) || defaultConfig
   }
 
+  /**
+   * create keystore & return
+   * @param  password
+   * @return keystore object
+   */
   create(password: string): object {
     let addrVersion: number = this.config.isMainNet
       ? this.config.versions.address.mainNet
@@ -48,7 +53,7 @@ export default class Keyvenant {
     let privateKeyVersion: number = this.config.versions.privateKey
     let salt: string = this.config.secretKey.salt
 
-    return keystore.createKeystore(
+    return createKeystore(
       password,
       salt,
       addrVersion,
@@ -56,15 +61,35 @@ export default class Keyvenant {
     )
   }
 
+  /**
+   * dump to keystore file
+   * @param  password
+   */
   dump(password: string) {
     let keystore = this.create(password)
-    exportToFile(keystore)
+    let name: string = exportToFile(keystore)
+    console.log('Keystore exported: ', name)
   }
 
-  recover(encrypted: string) {
-    console.log(keystore.deconstructEncrypted(encrypted))
+  /**
+   * recover private key from keystore and password
+   * only in Node env
+   * @param  password
+   * @param  filepath keystore filepath
+   * @return private key string in hex
+   */
+  recover(password: string, filepath: string): string {
+    let keystore = importFromFile(filepath)
+    let salt: string = this.config.secretKey.salt
+    console.log('// keystore from file', keystore)
+
+    let privateKey: string = recoverFromKeystore(password, salt, keystore)
+
+    console.log('// private key', privateKey)
+    return privateKey
   }
 }
 
 let k = new Keyvenant()
-k.dump('foo')
+// k.dump('foo')
+k.recover('foo', 'src/lib/tests/UTC--2019-01-03T14-58-12.083Z--4k1iCM4a3D3FVmEQ4DokcsZt3ikRu6fJHbwaDrEdPVuRbQBDnC5')
