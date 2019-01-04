@@ -27,3 +27,6 @@ private key:
 ```
 
 - try create & recover with `yarn dev`
+
+## Docs
+[Keyvenant TypeDoc](https://covenantsql.github.io/keyvenant/)
