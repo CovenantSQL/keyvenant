@@ -1,0 +1,15 @@
+{
+  "address": "4jeXVqtyoTSMKwxnu1S7memA9EAUSwR8vXUkPkKyUhM7goZj1WU",
+  "encrypted": "Mc2ndvFvgECLTgMiBLisUxdZncCvLSXFjPWHAu5MwsCRB5XM4kPNWxqZkK7PDASxHDrvsdXZQagci11eFrVtZf6M17wHe2",
+  "mac": "f8e1f5cebbbef8505e3dfe41db062ea814289bb77b2f71104c1e7a65e6494a03",
+  "crypto": {
+    "cipher": "aes-256",
+    "ciphertext": "26744256b08222af0c6988343083def6bebccd903c22cf13416202353dabecbda7483ebe00828c6415695df3a0b8c202",
+    "iv": "ae55361061af8a0ce310d725ef811e66"
+  },
+  "derivation": {
+    "kdf": "sha256x2",
+    "salt": "c04ea47149654131794b6a702f394543"
+  },
+  "version": 35
+}

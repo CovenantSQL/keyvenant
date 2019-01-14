@@ -28,8 +28,9 @@ const defaultConfig = {
     privateKey: 0x23
   },
   secretKey: {
-    salt: Buffer.from('auxten-key-salt-auxten', 'utf8').toString('hex')
-    // salt: 'c04ea47149654131794b6a702f394543'
+    // deprecated salt for testnet
+    // salt: Buffer.from('auxten-key-salt-auxten', 'utf8').toString('hex')
+    salt: 'c04ea47149654131794b6a702f394543'
   }
 }
 
@@ -89,7 +90,3 @@ export default class Keyvenant {
     return privateKey
   }
 }
-
-let k = new Keyvenant()
-// k.dump('foo')
-k.recover('foo', 'src/lib/tests/UTC--2019-01-03T14-58-12.083Z--4k1iCM4a3D3FVmEQ4DokcsZt3ikRu6fJHbwaDrEdPVuRbQBDnC5')

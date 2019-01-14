@@ -62,7 +62,7 @@ export function recoverFromKeystore(
   // check mac
   let macToVerify: string = constructMac(secretKey, ciphertext)
   if (macToVerify !== keystore.mac) {
-    throw new Error('Input password is not valid for the keystore')
+    throw new Error('Input password is not valid for the keystore or version not compatible')
   }
 
   // decrypt private key
