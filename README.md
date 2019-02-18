@@ -2,6 +2,11 @@
 
 Keyvenant is a JavaScript tool to generate and export CovenantSQL keys to facilitate key management locally and in web extensions.
 
+## Background
+CovenantSQL keystore creation and recover flow is as following:
+
+![flow](docs/flow.jpg)
+
 ## Usage
 - `npm install keyvenant`
 
